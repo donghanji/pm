@@ -371,7 +371,7 @@
 		 		String:conf is undefined,get module configuration
 				Object set many module configurations,{name:{configuration}}
 		 * @param {undefine/Object}
-		 		undefine:name is not empty,null,undefined and so on,get a module configuration
+		 		undefined:name is not empty,null,undefined and so on,get a module configuration
 				Object set a module configuration
 		 */
 		module.sets=function(name,conf){

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Plugins Modules</title>
+</head>
+
+<body>
+<script type="text/javascript" src="module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	module.config({
+		require:false,//default false
+		base:'',
+		alias:{},
+		files:[],
+		globals:{},
+		sets:{},
+		debug:false
+	});
+	//define a module,not a file
+	module.declare('math',function(require,exports,module){
+		exports.add=function(){
+			var sum = 0, i = 0, args = arguments, l = args.length;
+			while (i < l) {
+				sum += args[i++];
+			}
+			
+			return sum;
+		};
+	});
+	//define another module,not a file too
+	module.declare('increment',['math'],function(require,exports,module){
+		var add=require('math').add;
+		exports.increment=function(val){
+			
+			return add(val,1);
+		};
+	});
+	
+	//test
+	var inc=module.declare('increment').increment;
+	var a=1;
+	var res=inc(a);
+	console.log(res);//2
+})();
+
+</script>
+</body>
+</html>

@@ -10,4 +10,4 @@ The aims of PM is that taking modules as the core to form a powerful plug-in lib
 
 Everything is just to begin.
 
-The future of the PM, you and I, we us grow togetherâ€¦.
+The future of the PM, you and I, we us grow together¡­.

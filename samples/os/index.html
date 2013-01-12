@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>os module use ...</title>
+</head>
+
+<body>
+<script type="text/javascript" src="module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	module.config({
+		require:false,//default false
+		base:'',
+		alias:{},
+		files:[],
+		globals:{},
+		sets:{},
+		debug:false
+	});
+	//test
+	module.declare(['os'],function(require){
+		var os=require('os');
+		console.log(os.desktop);
+		console.log(os.version);
+	});
+	
+})();
+
+</script>
+</body>
+</html>

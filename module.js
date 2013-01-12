@@ -28,6 +28,7 @@
 			'require':false,//whether open require mode
 			'timeout':7000,//.ms
 			'base':'',//base path
+			'dirs':{},//directories,include modules,plugins,mobile,pad,web
 			'alias':{},//module alias
 			'files':[],//not a module,a common file,there is no define method in it
 			'globals':{},//global variables
@@ -44,7 +45,8 @@
 		'JSSUFFIX':/\.js$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
 		'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
-		'MODULENAME':/\/(\S+)?(?:\1)?/
+		'MODULENAME':/\/(\S+)?(?:\1)?/,
+		'PLACEHOLDER_DIR':/\{(\S+)?\}(?:\1)?/
 	},
 	//status
 	STATUS={
@@ -277,6 +279,33 @@
 			$util=module.util,
 			$path=module.path;
 		/*
+		 * @private
+		 * @desc
+		 		replace placeholders({modules},{plugins},{mobile},{pad} and {web}) for actual directory
+		 *
+		 * @param {String} alias placeholder directory
+		 * @return {String} alias actual directory
+		 *
+		 */
+		module.dirs=function(alias){
+			alias=$util.isObject(alias) ? alias : {};
+			
+			var dirs=$config.dirs,
+				reg=REGX['PLACEHOLDER_DIR'];
+			for(var dir in alias){
+				var ret=reg.exec(alias[dir]),
+					res=alias[dir];
+				if(ret&& ret.length > 1){
+					var r=dirs[ret[1]]||'';
+					res=res.replace(ret[0],r);
+				}
+				
+				alias[dir]=res;
+			}
+			
+			return alias;
+		};
+		/*
 		 * @public
 		 * @desc module initialization,module config
 		 * 
@@ -289,6 +318,8 @@
 			conf=$util.isObject(conf) ? conf : {};
 			
 			$config=$util.extend($config,conf);
+			//replace placeholder
+			$config.alias=module.dirs($config.alias);
 			if($config.require === true){
 				//require
 				global.require=module.declare;
@@ -314,6 +345,7 @@
 		 */
 		module.alias=function(alias){
 			alias=$util.isObject(alias) ? alias : {};
+			alias=module.dirs(alias);
 			
 			$config.alias=$util.extend(alias,$config.alias);
 		};

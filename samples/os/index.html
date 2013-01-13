@@ -22,7 +22,9 @@
 	//test
 	module.declare(['os'],function(require){
 		var os=require('os');
-		console.log(os);
+		if(os.desktop){
+			console.log(os.browser);
+		}
 	});
 	
 })();

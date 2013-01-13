@@ -54,6 +54,7 @@
 			if(os.desktop){
 				var match=chrome||safari||opera||msie||ua.indexOf('compatible') < 0 && mozilla;
 				os[match[1]] = true;
+				os['browser']=match[1];
 				os['version'] = match[2];
 			}
 			

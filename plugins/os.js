@@ -46,9 +46,9 @@
 			if (iphone) os.ios = true, os.version = iphone[2].replace(/_/g, '.'), os.iphone = true;
 			if (ipad) os.ios = true, os.version = ipad[2].replace(/_/g, '.'), os.ipad = true;
 			if (webos) os.webos = true, os.version = webos[2];
-			if (touchpad) os.touchpad = true;
+			if (touchpad) os.touchpad = true,os.version='';
 			if (blackberry) os.blackberry = true, os.version = blackberry[2];
-			if (!(android || iphone || ipad || webos || touchpad || blackberry)) os.desktop=true,os.version=null;
+			if (!(android || iphone || ipad || webos || touchpad || blackberry)) os.desktop=true,os.version='';
 			
 			if (webkit) os.webkit=true;
 			if(os.desktop){

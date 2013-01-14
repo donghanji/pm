@@ -10,16 +10,16 @@ html,body{width:100%;height:100%;}
 
 <body>
 &nbsp;
-<script type="text/javascript" src="module.js"></script>
+<script type="text/javascript" src="../../../module.js"></script>
 <script type="text/javascript">
 
 (function(){
 	module.config({
 		require:false,//default false
-		base:'',
-		dirs:{'modules':'modules','plugins':'plugins'},
+		base:'../../../',
+		dirs:{'modules':'modules','plugins':'plugins','mobile':'plugins/mobile'},
 		alias:{
-			'touchevent':'{plugins}/touchevent'
+			'touchevent':'{mobile}/touchevent'
 		},
 		files:[],
 		globals:{},

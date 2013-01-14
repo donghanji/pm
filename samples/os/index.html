@@ -6,14 +6,17 @@
 </head>
 
 <body>
-<script type="text/javascript" src="module.js"></script>
+<script type="text/javascript" src="../../module.js"></script>
 <script type="text/javascript">
 
 (function(){
 	module.config({
 		require:false,//default false
-		base:'',
-		alias:{},
+		base:'../../',
+		dirs:{'plugins':'plugins'},
+		alias:{
+			'os':'{plugins}/os'
+		},
 		files:[],
 		globals:{},
 		sets:{},

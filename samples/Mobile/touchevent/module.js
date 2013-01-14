@@ -41,6 +41,7 @@
 	
 	//regx
 	var REGX={
+		'SLASHDIR':/^\//,
 		'BASEDIR':/.*(?=\/.*$)/,
 		'JSSUFFIX':/\.js$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
@@ -249,6 +250,9 @@
 			//absolute
 			if(!(uri.indexOf('//') > -1)){
 				uri=base+uri;
+			}
+			if(REGX.SLASHDIR.test(uri)){
+				uri=uri.replace(REGX.SLASHDIR,'');
 			}
 			if(!REGX.JSSUFFIX.test(uri)){
 				uri=uri+'.js';

@@ -434,6 +434,8 @@
 				
 				return;
 			}
+			var	aid=module.isInAlias(name);
+			name=aid&&aid['k']||name;
 			if(conf === undefined){
 				
 				return $config.sets[name]||{};

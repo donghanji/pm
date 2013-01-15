@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>module.config-sets</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	/*
+	 * module.config sets using
+	 *
+	 	you can change the default options of the module by this way 
+		
+	 *
+	 */
+	//module config
+	module.config({
+		alias:{
+			'a':'a.plugin'
+		},
+		sets:{
+			'a':{
+				//'time':2000//remove the comment,look the console
+			}
+		}
+	});
+	module.declare(['a'],function(require){
+		
+	});
+})();
+
+</script>
+</body>
+</html>

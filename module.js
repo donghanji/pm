@@ -400,6 +400,10 @@
 				
 				return $config.globals;
 			}
+			if($util.isString(globals)){
+				
+				return $config.globals[globals]||'';
+			}
 			globals=$util.isObject(globals) ? globals : {};
 			
 			$config.globals=$util.extend(globals,$config.globals);

@@ -348,7 +348,7 @@
 		 * @param {Object}
 		 */
 		module.alias=function(alias){
-			if(alias === undefined){
+			if($util.isEmpty(alias)){
 				
 				return $config.alias;
 			}
@@ -368,7 +368,7 @@
 				Object:a or many file,and the file name will be in the module.alias
 		 */
 		module.files=function(files){
-			if(files === undefined){
+			if($util.isEmpty(files)){
 				
 				return $config.files;
 			}
@@ -396,7 +396,7 @@
 		 *
 		 */
 		module.globals=function(globals){
-			if(globals === undefined){
+			if($util.isEmpty(globals)){
 				
 				return $config.globals;
 			}
@@ -418,7 +418,7 @@
 		 		undefined:if name is empty,null,undefined,return all module configurations
 		 		String:conf is undefined,get module configuration
 				Object set many module configurations,{name:{configuration}}
-		 * @param {undefine/Object}
+		 * @param {undefine/Object} conf
 		 		undefined:name is not empty,null,undefined and so on,get a module configuration
 				Object set a module configuration
 		 */
@@ -434,8 +434,8 @@
 				
 				return;
 			}
-			var	aid=module.isInAlias(name);
-			name=aid&&aid['k']||name;
+			name=module.aliasId(name);
+			
 			if(conf === undefined){
 				
 				return $config.sets[name]||{};
@@ -532,8 +532,8 @@
 		};
 		// set module status
 		module.statusSet=function(id,status){
-			var	aid=module.isInAlias(id);
-			id=aid&&aid['k']||id;
+			id=module.aliasId(id);
+			
 			if(!StatusCacheQueue[id]){
 				StatusCacheQueue[id]={};
 			}
@@ -542,18 +542,14 @@
 		};
 		// get module status
 		module.getStatus=function(id){
-			var	aid=module.isInAlias(id);
-			id=aid&&aid['k']||id;
+			id=module.aliasId(id);
 			
 			return StatusCacheQueue[id]&&StatusCacheQueue[id]['status']||STATUS.BEGIN;
 		};
 		//load module
 		module.load=function(uris){
-			var $util=module.util,
-				$path=module.path;
 			$util.each(uris,function(i,id){
-				var aid=module.isInAlias(id);
-				id=aid&&aid['v']||id;
+				id=module.aliasId(id,'v');
 				var uri=$path.realpath(id);
 				
 				module.loadJS(id,uri);
@@ -572,11 +568,18 @@
 			
 			return null;
 		};
+		//get alias id
+		module.aliasId=function(id,type){
+			type=type||'k';
+			var	aid=module.isInAlias(id);
+			id=aid&&aid[type]||id;
+			
+			return id;
+		};
 		//is module in the module.files
 		module.isInFiles=function(name){
 			var files=$config.files,
-				id=module.isInAlias(name);
-				name=id&&id['k']||name;
+				name=module.aliasId(name);
 			var i=0,
 				len=files.length;
 			for(;i<len;i++){
@@ -589,8 +592,7 @@
 		};
 		//is module already in the module set
 		module.isInModules=function(id){
-			var	aid=module.isInAlias(id);
-			id=aid&&aid['k']||id;
+			id=module.aliasId(id);
 			
 			return ModulesSet[id];
 		};
@@ -608,8 +610,8 @@
 		};
 		//set module
 		module.moduleSet=function(id,dependencies,factory){
-			var aid=module.isInAlias(id);
-			id=aid&&aid['k']||id;
+			id=module.aliasId(id);
+			
 			if(module.isInModules(id) && $util.isFunction(factory)){
 				throw 'module \"'+ id + '\" already defined!';
 			}
@@ -626,8 +628,8 @@
 		};
 		//compile module
 		module.compile=function(id){
-			var aid=module.isInAlias(id),
-				id=aid&&aid['k']||id;
+			id=module.aliasId(id);
+			
 			$util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
 					return;
@@ -690,8 +692,7 @@
 		module.exports=function(id){
 			//module in ModulesSet
 			if(module.isInModules(id)){
-				var aid=module.isInAlias(id);
-					id=aid&&aid['k']||id;
+				id=module.aliasId(id);
 				var exports=ModulesSet[id].factory ? module.build(ModulesSet[id]) : ModulesSet[id].exports;
 				
 				return exports;
@@ -751,6 +752,7 @@
 		};
 		//remove a module,only in open require mode
 		module.remove=function(id){
+			id=module.aliasId(id);
 			//remove javascript
 			module.removeJS(id);
 			//delete status

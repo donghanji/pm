@@ -46,7 +46,7 @@
 		'JSSUFFIX':/\.js$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
 		'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
-		'MODULENAME':/\/(\S+)?(?:\1)?/,
+		'MODULENAME':/\/([\w.]+)?(?:\1)?$/,
 		'PLACEHOLDER_DIR':/\{(\S+)?\}(?:\1)?/
 	},
 	//status
@@ -348,6 +348,10 @@
 		 * @param {Object}
 		 */
 		module.alias=function(alias){
+			if(alias === undefined){
+				
+				return $config.alias;
+			}
 			alias=$util.isObject(alias) ? alias : {};
 			alias=module.dirs(alias);
 			
@@ -364,6 +368,10 @@
 				Object:a or many file,and the file name will be in the module.alias
 		 */
 		module.files=function(files){
+			if(files === undefined){
+				
+				return $config.files;
+			}
 			if($util.isString(files)){
 				files=[].concat(files);
 			}
@@ -388,7 +396,7 @@
 		 *
 		 */
 		module.globals=function(globals){
-			if(!globals){
+			if(globals === undefined){
 				
 				return $config.globals;
 			}
@@ -459,7 +467,6 @@
 				node&&node.removeEventListener('load',module.onScriptLoad,false);
             	node&&node.removeEventListener('error',module.onScriptError,false);
 			}
-			
 			
 			return{
 				node:node,
@@ -550,7 +557,8 @@
 		module.isInAlias=function(name){
 			var alias=$config.alias;
 			for(var k in alias){
-				if(k === name || alias[k] === name){
+				var v=$util.path2name(alias[k]);
+				if(k === name || v === name || alias[k] === name){
 					
 					return {k:k,v:alias[k]};
 				}
@@ -612,14 +620,13 @@
 		};
 		//compile module
 		module.compile=function(id){
-			var aid=module.isInAlias(id);
-			id=aid&&aid['k']||id;
+			var aid=module.isInAlias(id),
+				id=aid&&aid['k']||id;
 			$util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
 					return;
 				}
 				var links=json['links']||[];
-				
 				if(!$util.isInArray(links,id)){
 					return;
 				}
@@ -643,7 +650,6 @@
 						
 						dependencies=dependencies.concat(dept);
 						dependencies=$util.unique(dependencies);
-						
 						ModuleCachesQueue.splice(index,1);
 						module.complete(uid,dependencies,factory);
 				}
@@ -657,7 +663,6 @@
 			module.moduleSet(id,dependencies,factory);
 			
 			var exports=module.exports(id);
-			
 			module.compile(id);
 			
 			return exports; 
@@ -679,6 +684,8 @@
 		module.exports=function(id){
 			//module in ModulesSet
 			if(module.isInModules(id)){
+				var aid=module.isInAlias(id);
+					id=aid&&aid['k']||id;
 				var exports=ModulesSet[id].factory ? module.build(ModulesSet[id]) : ModulesSet[id].exports;
 				
 				return exports;
@@ -730,7 +737,6 @@
 				};
 				
 				ModuleCachesQueue.push(json);
-				
 				module.load(dependencies);
 				return;
 			}

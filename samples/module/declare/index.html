@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>module.declare</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	/*
+	 * module.declare using
+	 *
+	 * 
+		define module
+		require module
+	    
+		If open require mode,
+		module.declare method is equal to define method
+		module.declare method is equal to require method, too.
+	 *
+	 */
+	//module config
+	module.config({
+		require:false,
+		alias:{}
+	});
+	
+	/*====================================*/
+	/* way one,direct definition module   */
+	/*====================================*/
+	
+	//define math module,no dependency
+	module.declare('math',function(require,exports){
+		exports.add=function(){
+			var sum = 0, i = 0, args = arguments, l = args.length;
+			while (i < l) {
+				sum += args[i++];
+			}
+			
+			return sum;
+		};
+	});
+	//define increment,dependen on math module
+	module.declare('increment',['math'],function(require,exports,module){
+		var add=require('math').add;
+		exports.increment=function(val){
+			
+			return add(val,1);
+		};
+	});
+	
+	//test console
+	console.log('require increment module');
+	var inc=module.declare('increment');
+	console.log(inc.increment(99));
+	
+	/*====================================*/
+	/* way two,definition module by a file*/
+	/*====================================*/
+	console.log('require a.module,not dependencies');
+	module.declare(['a.module'],function(require){
+		console.log('---1---');
+		console.log(require('a.module').foo);
+	});
+	
+	console.log('require b.mocule,b.module depend on c.module');
+	module.declare(['b.module'],function(require){
+		console.log('---2---');
+		console.log(require('b.module').foo);
+	});
+	
+	console.log('require a.module,b.module,d.module by anonymous requiring');
+	module.declare(function(require){
+		console.log('---3---');
+		console.log(require('a.module').foo);
+		console.log(require('b.module').foo);
+		console.log(require('d.module').foo);
+	});
+	
+})();
+
+</script>
+</body>
+</html>

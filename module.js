@@ -46,6 +46,7 @@
 		'JSSUFFIX':/\.js$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
 		'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
+		'REQUIRE_FUN':/^function \(\w*\)/,
 		'MODULENAME':/\/([\w.]+)?(?:\1)?$/,
 		'PLACEHOLDER_DIR':/\{(\S+)?\}(?:\1)?/
 	},
@@ -608,11 +609,38 @@
 			
 			return arr;
 		};
+		/*
+		 * @private
+		 * @desc
+				is require a module, not define a module
+				such as
+				module.declare(id,dependencies,function(){})
+				module.declare(id,dependencies,function(require){})
+				
+				return true
+				such as
+				module.declare(id,dependencies,function(require,exports){})
+				module.declare(id,dependencies,function(require,exports,module){})
+				
+				return false
+		 *
+		 */
+		module.isRequire=function(code){
+			if(code){
+				return REGX.REQUIRE_FUN.test(code);	
+			}
+			
+			return false;
+		};
 		//set module
 		module.moduleSet=function(id,dependencies,factory){
 			id=module.aliasId(id);
 			
 			if(module.isInModules(id) && $util.isFunction(factory)){
+				if(module.isRequire(factory.toString())){
+					factory(this.declare);
+					return;
+				}
 				throw 'module \"'+ id + '\" already defined!';
 			}
 			

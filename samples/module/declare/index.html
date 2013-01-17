@@ -53,7 +53,16 @@
 	});
 	
 	//test console
-	console.log('require increment module');
+	
+	//require increment module
+	console.log('require increment module,one way');
+	module.declare('increment',function(require){
+		var inc=require('increment'),
+			math=require('math');
+		console.log(math.add(1,2,3,4));
+		console.log(inc.increment(1));
+	});
+	console.log('require increment module,two way');
 	var inc=module.declare('increment');
 	console.log(inc.increment(99));
 	

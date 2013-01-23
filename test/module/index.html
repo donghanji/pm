@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>module.js unit test</title>
+<link rel="stylesheet" href="../unit.test.css" type="text/css" />
+</head>
+
+<body>
+<script type="text/javascript" src="../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	module.config({
+		base:'../../',
+		dirs:{'modules':'modules','test':'test'},
+		alias:{
+			'unit':'{modules}/unit.module',
+			'module.unit.test':'{test}/module/module.unit.test'
+		}
+	});
+	//module.js unit test
+	module.declare(['unit','module.unit.test'],function(require){
+		var assert=require('unit').assert,
+			run=require('unit').run;
+		run('module.js unit test:');
+		run(require('module.unit.test'));
+	});
+})();
+
+</script>
+</body>
+</html>

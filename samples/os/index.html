@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>os module use ...</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	module.config({
+		require:false,//default false
+		base:'../../',
+		dirs:{'plugins':'plugins'},
+		alias:{
+			'os':'{plugins}/os'
+		},
+		files:[],
+		globals:{},
+		sets:{},
+		debug:false
+	});
+	//test
+	module.declare(['os'],function(require){
+		var os=require('os');
+		if(os.desktop){
+			console.log(os.browser);
+		}
+	});
+	
+})();
+
+</script>
+</body>
+</html>

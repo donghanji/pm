@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>mask module use ...</title>
+<link rel="stylesheet" href="mask.css" type="text/css" />
+<style type="text/css">
+.mask .loading{
+	margin-top:-20px;
+}
+</style>
+</head>
+
+<body>
+<div style="border:1px solid red;width:200px;height:200px;position:relative;" id="_container"></div>
+<script type="text/javascript" src="../../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	module.config({
+		base:'../../../',
+		dirs:{'plugins':'plugins','web':'plugins/web'},
+		alias:{
+			'mask':'{web}/mask'
+		}
+	});
+	//test
+	module.sets({
+		'mask':{
+			time:'',//auto hidden time
+			text:'',//show text
+			auto:true,//auto show
+			cls:'mask',//class
+			//opacity:0.6,//opacity
+			zIndex:9999,//z-index
+			container:null,//
+			renderTo:''
+		}
+	});
+	module.declare(['mask'],function(require){
+		var Mask=require('mask'),
+			//mask one
+			/**/mask=new Mask({
+				//opacity:0.7,
+				//auto:false,
+				id:'mask_one',
+				//container:'<div style="width:400px;height:300px;border:1px solid red;background-color:yellow;">ttt</div>',
+				text:'数据正在加载中...'
+			});
+			//mask two
+			/*mask2=new Mask({
+				cls:'mask',
+				renderTo:'_container',
+				text:'数据请求中...'
+			});*/
+	});
+	
+})();
+
+</script>
+</body>
+</html>

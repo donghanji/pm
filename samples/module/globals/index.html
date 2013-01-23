@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>module.config-globals</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	/*
+	 * module.config globals using
+	 *
+	 	you can change all the global variables in modules or plugins 
+		
+	 *
+	 */
+	//module config
+	module.config({
+		require:true,//open require mode,require jquery module
+		base:'../../../',
+		dirs:{'modules':'modules','$this':'samples/module/globals'},
+		alias:{
+			'jquery.module':'{modules}/jquery.module',
+			'zepto.module':'{modules}/zepto.module',
+			'a':'{$this}/a.plugin'
+		},
+		globals:{
+			//'$':'zepto.module'//remove the comment,look the console
+		}
+	});
+	
+	module.declare(['a.plugin'],function(require){
+		
+	});
+})();
+
+</script>
+</body>
+</html>

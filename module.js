@@ -338,6 +338,7 @@
 				module.ModuleCachesQueue=ModuleCachesQueue;
 				module.StatusCacheQueue=StatusCacheQueue;
 				global.module=module;
+				global.module.config=module.init;
 			}
 		};
 		/*

@@ -3,8 +3,15 @@
 <head>
 <meta charset="utf-8">
 <title>Plugins Modules</title>
+<style type="text/css">
+*{font-family:arial,sans-serif;}
+.wellcome{font-weight:bold;font-size:24pt;color:blue;}
+.wellcome .w{font-size:32pt;}
+.wellcome .pm{font-size:48pt;color:#000;font-family:'微软雅黑';}
+#time{font-size:12pt;color:green;}
+</style>
 </head>
-
+<div class="wellcome"><span class="w">W</span>ellcome to <span class="pm">PM</span> ...<span id="time">0s</span></div>
 <body>
 <script type="text/javascript" src="module.js"></script>
 <script type="text/javascript">
@@ -33,61 +40,18 @@
 	//define another module,not a file too
 	module.declare('increment',['math'],function(require,exports,module){
 		var add=require('math').add;
-		exports.increment=function(val,dir){
-			var ins=dir === 1 ? 1 : -1;
-			return add(val,ins);
+		exports.increment=function(val){
+			return add(val,1);
 		};
 	});
 	
 	//test
-	var inc=module.declare('increment').increment;
-	var a=0,
-		dir=1,
-		nw=0,
-		total=20;
-	document.addEventListener('mousedown',function(){
-		total=0;
-	});
+	var inc=module.declare('increment').increment,
+		a=0;
 	var t=setInterval(function(){
-		a=inc(a,dir);
-		var span=document.createElement('span'),
-			_w=(a*6),
-			_m=1;
-		span.style.height=_w+'px';
-		span.style.textAlign='center';
-		span.style.lineHeight=_w+'px';
-		span.style.fontSize=a=== 1 ? '1px' : a+'px';
-		span.style.fontWeight='bold';
-		span.style.marginLeft=_m+'px';
-		span.style.display='inline-block';
-		span.style.position='relative';
-		span.style.bottom=0;
-		span.style.width=_w+'px';
-		span.style.border=''+a+'px solid red';
-		span.style.backgroundColor='yellow';
-		span.innerHTML=a;
-		var w=document.body.clientWidth,
-			in_w=_w*dir+_m;
-		nw+=in_w
-		if(nw >= w-in_w){
-			dir=-1;
-			return;
-		}
-		if(a <= 1){
-			dir=1;
-		}
-		total--;
-		if(total <=0){
-			span.style.width='200px';
-			span.style.fontSize='20px';
-			span.style.color='green';
-			span.innerHTML='Wellcome to PM ...';
-			
-			clearInterval(t);
-		}
-		document.body.appendChild(span);
+		a=inc(a);
+		document.getElementById('time').innerHTML=''+a+'s';
 	},1000);
-	//console.log(res);//2
 })();
 
 </script>

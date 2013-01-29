@@ -33,6 +33,7 @@
 			'files':[],//not a module,a common file,there is no define method in it
 			'globals':{},//global variables
 			'sets':{},//module configuration
+			'coms':{},//one file ,multiple modules
 			'debug':false//whether open debug mode
 		},
 		util:{},
@@ -482,15 +483,18 @@
 			};
 		};
 		//load javascript
-		module.loadJS=function(id,url){
+		module.loadJS=function(id){
+			var m=module.isInComs(id);
+			id=m !== null ? m : id;
 			if(module.getStatus(id) > STATUS.BEGIN){
 				return;
 			}
 			module.statusSet(id,STATUS.LOADING);
 			var head=document.getElementsByTagName('head')[0],
-				node=module.createScript(id);
+				node=module.createScript(id),
+				id=module.aliasId(id,'v');
 			
-			node.src = url;
+			node.src = $path.realpath(id);
 			head.appendChild(node);
 			if(node.attachEvent){
 				node.attachEvent('onreadystatechange',module.onScriptLoad);
@@ -502,6 +506,7 @@
 		};
 		//remove javascript by the data-requiremodule attribute
 		module.removeJS=function(name){
+			name=module.aliasId(name);
 			$util.each(module.scripts(),function(i,scriptNode) {
 				if (scriptNode&&scriptNode.getAttribute('data-requiremodule') === name) {
 					scriptNode.parentNode.removeChild(scriptNode);
@@ -551,10 +556,8 @@
 		//load module
 		module.load=function(uris){
 			$util.each(uris,function(i,id){
-				id=module.aliasId(id,'v');
-				var uri=$path.realpath(id);
 				
-				module.loadJS(id,uri);
+				module.loadJS(id);
 			});
 		};
 		// is module in the module.alias
@@ -591,6 +594,20 @@
 			}
 			
 			return false;
+		};
+		// is module in the module.coms
+		module.isInComs=function(name){
+			var coms=$config.coms,
+				k=module.aliasId(name),
+				v=module.aliasId(name,'v');
+			for(var m in coms){
+				if(k === m || $util.isInArray(coms[m],k) || $util.isInArray(coms[m],v)){
+					
+					return m;	
+				}
+			}
+			
+			return null;
 		};
 		//is module already in the module set
 		module.isInModules=function(id){
@@ -657,16 +674,18 @@
 		};
 		//compile module
 		module.compile=function(id){
-			id=module.aliasId(id);
-			
+			id=module.aliasId(id),
+			v=module.aliasId(id,'v');
 			$util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
 					return;
 				}
 				var links=json['links']||[];
-				if(!$util.isInArray(links,id)){
+				if(!($util.isInArray(links,id) || $util.isInArray(links,v))){
+					
 					return;
 				}
+				
 				function deleteLink(){
 					var i=0,
 						len=links.length;
@@ -699,8 +718,8 @@
 			
 			module.moduleSet(id,dependencies,factory);
 			
-			var exports=module.exports(id);
 			module.compile(id);
+			var exports=module.exports(id);
 			
 			return exports; 
 		};

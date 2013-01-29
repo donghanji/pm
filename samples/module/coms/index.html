@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>module.config-coms</title>
+</head>
+
+<body>
+<script type="text/javascript" src="../../../module.js"></script>
+<script type="text/javascript">
+
+(function(){
+	/*
+	 * module.config coms using
+	 *
+	 	one file ,including multiple modules,formed components.
+	 *
+	 */
+	//module config
+	module.config({
+		require:true,//open require mode,require jquery module
+		alias:{
+			'moduleA':'a.module'
+		},
+		coms:{
+			'component':['moduleA','b.module']
+		},
+		debug:true
+	});
+	/*module.declare(['moduleA','b.module','component'],function(require){
+		var a=require('a.module'),
+			b=require('b.module'),
+			c=require('component');
+			
+		console.log(a.foo);
+		console.log(b.foo);
+		console.log(c.foo);
+	});*/
+	/*
+	module.declare(['b.module'],function(require){
+		var b=require('b.module');
+		console.log(b.foo);
+	});*/
+	module.declare(['a.module'],function(require){
+		var a=require('moduleA');
+		console.log(a.foo);
+	});
+})();
+
+</script>
+</body>
+</html>

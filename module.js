@@ -697,6 +697,7 @@
 						}
 					}
 				};
+				
 				if(links.length <= 1){
 					var uid=json['id']||$util.uid(),
 						dependencies=json['dependencies']||[],
@@ -718,8 +719,8 @@
 			
 			module.moduleSet(id,dependencies,factory);
 			
-			module.compile(id);
 			var exports=module.exports(id);
+			module.compile(id);
 			
 			return exports; 
 		};

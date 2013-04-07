@@ -302,7 +302,7 @@
 				var ret=reg.exec(alias[dir]),
 					res=alias[dir];
 				if(ret&& ret.length > 1){
-					var r=dirs[ret[1]]||'';
+					var r=dirs[ret[1]]||ret[1]||'';
 					res=res.replace(ret[0],r);
 				}
 				

@@ -93,103 +93,111 @@
 	//define slide module
 	module.declare('slide',[$name],function(require,exports){
 		var $=require($name);
-		var def={
-			target:'',//最外层目标对象
-			effect: 'scrollY',//动画效果
-			autoPlay:true,//是否自动
-			speed: 'normal',//速度
-			timer: 3000,//时间
-			width:0,//目标对象宽度
-			height:0,//目标对象高度，对于某些不能正常获取高宽度的情况，可使用该参数
-			zIndex:1,//z-index
-			clsNav:'slide_nav',//导航包裹层class
-			clsCon:'slide_con',//内容包裹层class
-			steps:1
-		};
-		exports.load=function(options){
+		function Slide(options){
+			this.def={
+				target:'',//最外层目标对象
+				effect: 'scrollY',//动画效果
+				auto:true,//是否自动
+				speed: 'normal',//速度
+				timer: 3000,//时间
+				width:0,//目标对象宽度
+				height:0,//目标对象高度，对于某些不能正常获取高宽度的情况，可使用该参数
+				zIndex:1,//z-index
+				clsNav:'slide_nav',//导航包裹层class
+				clsCon:'slide_con',//内容包裹层class
+				steps:1
+			};
 			options=options||{};
-			var opts=$.extend(def,options),
-				target=options.target;
-			if(!target){
+			this.opts=$.extend(this.def,options);
+			this.target=options.target;
+			if(!this.target){
 				throw 'There must have a container object.';
 			}
-			target=typeof target === 'string' ? $(target) : target;//目标对象
-			var targetLi = target.find('.' + opts.clsNav).children(),//目标导航对象
-				clickNext = target.find('.' + opts.clsNav + ' .next'),//点击下一个按钮
-				clickPrev = target.find('.' + opts.clsNav + ' .prev'),//点击上一个按钮
-				ContentBox = target.find('.' + opts.clsCon ),//滚动的对象
-				ContentBoxNum=ContentBox.children().size(),//滚动对象的子元素个数
-				slideH=opts.height||ContentBox.children().first().height(),//滚动对象的子元素个数高度，相当于滚动的高度
-				slideW=opts.width||ContentBox.children().first().width();//滚动对象的子元素宽度，相当于滚动的宽度
-			var autoPlay,
-				slideWH,
-				zIndex=opts.zIndex||1,
-				index=1;
-			if(opts.effect === 'scrollY' || opts.effect === 'scroolTxt'){
-				slideWH=slideH;
-			}else if(opts.effect === 'scrollX' || opts.effect === 'scroolLoop'){
-				ContentBox.css('width',ContentBoxNum*slideW);
-				slideWH=slideW;
-			}else if(opts.effect === 'fade' || opts.effect === 'animate'){
-				ContentBox.children().css({'position':'absolute'});
-				ContentBox.first().css('z-index',zIndex);
+			this.target=typeof this.target === 'string' ? $(this.target) : this.target;//目标对象
+			this.targetLi = this.target.find('.' + this.opts.clsNav).children();//目标导航对象
+			this.clickNext = this.target.find('.' + this.opts.clsNav + ' .next');//点击下一个按钮
+			this.clickPrev = this.target.find('.' + this.opts.clsNav + ' .prev');//点击上一个按钮
+			this.ContentBox = this.target.find('.' + this.opts.clsCon );//滚动的对象
+			this.ContentBoxNum=this.ContentBox.children().size();//滚动对象的子元素个数
+			var slideH=this.opts.height||this.ContentBox.children().first().height(),//滚动对象的子元素个数高度，相当于滚动的高度
+				slideW=this.opts.width||this.ContentBox.children().first().width();//滚动对象的子元素宽度，相当于滚动的宽度
+			this.autoPlay=null;
+			this.slideWH;
+			this.zIndex=this.opts.zIndex||1;
+			this.index=1;
+			if(this.opts.effect === 'scrollY' || this.opts.effect === 'scroolTxt'){
+				this.slideWH=slideH;
+			}else if(this.opts.effect === 'scrollX' || this.opts.effect === 'scroolLoop'){
+				this.ContentBox.css('width',this.ContentBoxNum*slideW);
+				this.slideWH=slideW;
+			}else if(this.opts.effect === 'fade' || this.opts.effect === 'animate'){
+				this.ContentBox.children().css({'position':'absolute'});
+				this.ContentBox.first().css('z-index',this.zIndex);
 			}
-			var $this=target;
+			var $this=this.target,
+				_this=this;
 			//滚动函数
-			var doPlay=function(){
-				effect[opts.effect](ContentBox, targetLi, index, slideWH, opts);
-				index++;
-				if (index*opts.steps >= ContentBoxNum) {
-					index = 0;
+			this.doPlay=function(){
+				effect[_this.opts.effect](_this.ContentBox, _this.targetLi, _this.index, _this.slideWH, _this.opts);
+				_this.index++;
+				if (_this.index*_this.opts.steps >= _this.ContentBoxNum) {
+					_this.index = 0;
 				}
 			};
 			//下一条
-			clickNext.click(function(event){
-				effectLoop.scroolLeft(ContentBox, targetLi, index, slideWH, opts,function(){
-					for(var i=0;i<opts.steps;i++){
-	                    ContentBox.find('li:first',$this).appendTo(ContentBox);
+			_this.clickNext.click(function(event){
+				effectLoop.scroolLeft(_this.ContentBox, _this.targetLi, _this.index, _this.slideWH, _this.opts,function(){
+					for(var i=0;i<_this.opts.steps;i++){
+	                    _this.ContentBox.find('li:first',$this).appendTo(_this.ContentBox);
 	                }
-	                ContentBox.css({'left':'0'});
+	                _this.ContentBox.css({'left':'0'});
 				});
 				event.preventDefault();
 			});
 			//上一条
-			clickPrev.click(function(event){
-				for(var i=0;i<opts.steps;i++){
-	                ContentBox.find('li:last').prependTo(ContentBox);
+			_this.clickPrev.click(function(event){
+				for(var i=0;i<_this.opts.steps;i++){
+	                _this.ContentBox.find('li:last').prependTo(_this.ContentBox);
 	            }
-	          	ContentBox.css({'left':-index*opts.steps*slideW});
-				effectLoop.scroolRight(ContentBox, targetLi, index, slideWH, opts);
+	          	_this.ContentBox.css({'left':-_this.index*_this.opts.steps*slideW});
+				effectLoop.scroolRight(_this.ContentBox, _this.targetLi, _this.index, _this.slideWH, _this.opts);
 				event.preventDefault();
 			});
 			//自动播放
-			if (opts.autoPlay) {
-				autoPlay = setInterval(doPlay, opts.timer);
-				ContentBox.hover(function(){
-					if(autoPlay){
-						clearInterval(autoPlay);
+			if (_this.opts.auto) {
+				_this.autoPlay = setInterval(_this.doPlay, _this.opts.timer);
+				_this.ContentBox.hover(function(){
+					if(_this.autoPlay){
+						clearInterval(_this.autoPlay);
 					}
 				},function(){
-					if(autoPlay){
-						clearInterval(autoPlay);
+					if(_this.autoPlay){
+						clearInterval(_this.autoPlay);
 					}
-					autoPlay=setInterval(doPlay, opts.timer);
+					_this.autoPlay=setInterval(_this.doPlay, _this.opts.timer);
 				});
 			}
-			
+			if(_this.clickNext.length || _this.clickPrev.length){
+				
+				return;
+			}
 			//目标事件
-			targetLi.hover(function(){
-				if(autoPlay){
-					clearInterval(autoPlay);
+			_this.targetLi&&_this.targetLi.hover(function(){
+				if(_this.autoPlay){
+					clearInterval(_this.autoPlay);
 				}
-				index=targetLi.index(this);
-				window.setTimeout(function(){effect[opts.effect](ContentBox, targetLi, index, slideWH, opts);},200);
+				_this.index=_this.targetLi.index(this);
+				window.setTimeout(function(){effect[_this.opts.effect](_this.ContentBox, _this.targetLi, _this.index, _this.slideWH, _this.opts);},200);
 			},function(){
-				if(autoPlay){
-					clearInterval(autoPlay);
+				if(this.autoPlay){
+					clearInterval(_this.autoPlay);
 				}
-				autoPlay = setInterval(doPlay, opts.timer);
+				_this.autoPlay = setInterval(_this.doPlay, _this.opts.timer);
 			});
+		};
+		exports.load=function(options){
+			
+			return new Slide(options);
 		};
 	});
 })();

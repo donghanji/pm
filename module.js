@@ -789,14 +789,13 @@
 					id:id,
 					dependencies:dependencies,
 					factory:factory,
-					links:$util.path2name(dependencies)
+					links:$util.path2name(items)
 				};
 				
 				ModuleCachesQueue.push(json);
 				module.load(dependencies);
 				return;
 			}
-			
 			return module.complete(id,dependencies,factory);
 		};
 		//remove a module,only in open require mode

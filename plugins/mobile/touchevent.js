@@ -197,11 +197,14 @@
 				var theEvent = null;
 				this.moved=desktop ? false : this.moved;
 				
-				if(this.isInPressTime || this.moved){
+				var up=touchName+'up'
+				//trigger touch up event
+				EventManager.dispatch(target,up,e);
+				/*if(this.isInPressTime || this.moved){
 					var up=touchName+'up'
 					//trigger touch up event
 					EventManager.dispatch(target,up,e);
-				}
+				}*/
 				if(this.isInPressTime && this.isInDelayTime && !this.moved){
 					var on=touchName+'on';
 					if(target === this.prevTarget && !this.triggered){

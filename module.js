@@ -13,6 +13,8 @@
 		
 		//The future of the PM, you and I, we us grow together...
  *
+ * @update
+ 		https://github.com/donghanji/Plugins-Modules
  */
 ;(function(global,undefined){
 	//location pathname
@@ -26,6 +28,7 @@
 		version:'1.1.123.0',//version
 		options:{
 			'require':false,//whether open require mode
+			'nocache':false,
 			'timeout':7000,//.ms
 			'base':'',//base path
 			'dirs':{},//directories,include modules,plugins,mobile,pad,web
@@ -492,9 +495,12 @@
 			module.statusSet(id,STATUS.LOADING);
 			var head=document.getElementsByTagName('head')[0],
 				node=module.createScript(id),
-				id=module.aliasId(id,'v');
-			
-			node.src = $path.realpath(id);
+				id=module.aliasId(id,'v'),
+				src=$path.realpath(id);
+			if($config.nocache){
+				src=src+'?t='+new Date().getTime();//add random time
+			}
+			node.src=src;
 			head.appendChild(node);
 			if(node.attachEvent){
 				node.attachEvent('onreadystatechange',module.onScriptLoad);

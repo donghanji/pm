@@ -804,6 +804,22 @@
 			}
 			return module.complete(id,dependencies,factory);
 		};
+		module.extend=function(){
+			var options,
+			    res={},
+				length=arguments.length,
+				i=0;
+			for(;i<length;i++){
+				options=arguments[i];
+				if(typeof options === 'object'){
+					for(var name in options){
+						res[name]=options[name];
+					}
+				}
+			}
+			
+			return res;
+		};
 		//remove a module,only in open require mode
 		module.remove=function(id){
 			id=module.aliasId(id);
@@ -824,4 +840,5 @@
 	global.module.globals=module.globals;
 	global.module.sets=module.sets;
 	global.module.declare=module.declare;
+	global.module.extend=module.extend;//add extend method
 })(this);

@@ -34,12 +34,8 @@
 	});
 	//define jquery.module module
 	module.declare('jquery.module',['jquery'],function(require,exports,module){
-		if(jQuery && /1\.[0-6]./.test(jQuery.fn.jquery)){//jQuery version is less than 1.7
-			require('jquery',[],function(){
-				return jQuery;
-			});
-		}
+		var jQuery=global.jQuery||require('jquery')||{};
 		
 		return jQuery;
 	});
-})(this);
+})(window);

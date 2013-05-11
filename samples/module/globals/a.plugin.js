@@ -5,10 +5,12 @@
 	module.globals({
 		'$':'jquery.module'
 	});
-	module.declare('a.plugin',['jquery.module'],function(require,exports){
-	    var $name=module.globals()['$'];//module.globals('$');
+	var $name=module.globals()['$'];//module.globals('$');
+	module.declare('a.plugin',[$name],function(require,exports){
+	   
 		var $=require($name);
 		//
 		console.log($name);
+		console.dir($);
 	});
 })();

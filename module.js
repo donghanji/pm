@@ -35,7 +35,7 @@
 			'alias':{},//module alias
 			'files':[],//not a module,a common file,there is no define method in it
 			'globals':{},//global variables
-			'sets':{},//module configuration
+			'defaults':{},//module configuration
 			'coms':{},//one file ,multiple modules
 			'debug':false//whether open debug mode
 		},
@@ -428,14 +428,14 @@
 		 		undefined:name is not empty,null,undefined and so on,get a module configuration
 				Object set a module configuration
 		 */
-		module.sets=function(name,conf){
+		module.defaults=function(name,conf){
 			if($util.isEmpty(name)){
 				
-				return $config.sets;
+				return $config.defaults;
 			}
 			if($util.isObject(name)){
 				for(var i in name){
-					module.sets(i,name[i]);
+					module.defaults(i,name[i]);
 				}
 				
 				return;
@@ -444,13 +444,13 @@
 			
 			if(conf === undefined){
 				
-				return $config.sets[name]||{};
+				return $config.defaults[name]||{};
 			}
 			
 			conf=$util.isObject(conf) ? conf : {};
-			$config.sets[name]=$config.sets[name]||{};
+			$config.defaults[name]=$config.defaults[name]||{};
 			
-			$config.sets[name]=$util.extend(conf,$config.sets[name]);
+			$config.defaults[name]=$util.extend(conf,$config.defaults[name]);
 		};
 		//get all scripts
 		module.scripts=function(){
@@ -838,7 +838,7 @@
 	global.module.alias=module.alias;
 	global.module.files=module.files;
 	global.module.globals=module.globals;
-	global.module.sets=module.sets;
+	global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
 	global.module.extend=module.extend;//add extend method
 })(this);

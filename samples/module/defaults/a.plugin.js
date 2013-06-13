@@ -1,21 +1,21 @@
 (function(){
 	/*
-	module.sets({
+	module.defaults({
 		'a.plugin':{
 			'time':1000
 		}
 	});
 	*/
 	/**/
-	module.sets({
+	module.defaults({
 		'a.plugin':{
 			'time':1000
 		}
 	});
 	
 	module.declare('a.plugin',function(require,exports){
-	    var sets=module.sets('a.plugin');
+	    var defaults=module.defaults('a.plugin');
 		//
-		console.log('this default time is 1000,but output:'+sets['time']);
+		console.log('this default time is 1000,but output:'+defaults['time']);
 	});
 })();

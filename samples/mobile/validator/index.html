@@ -15,6 +15,11 @@ html,body{width:100%;height:100%;}
 	<div class="cell"><label class="label w60 tr">密&nbsp;&nbsp;码:&nbsp;</label><input type="password" tabindex="2" class="input" id="psw"/><span id="psw_error" class="error none"></span></div>
 	<div class="cell"><input tabindex="3" type="button" value="登&nbsp;&nbsp;录" class="btn" id="login"/></div>
 </div>
+<div class="formpanel">
+	<div class="cell"><label class="label w60 tr">邮&nbsp;&nbsp;箱:&nbsp;</label><input tabindex="1" class="input" id="email2"/><span id="email2_error" class="error none"></span></div>
+	<div class="cell"><label class="label w60 tr">密&nbsp;&nbsp;码:&nbsp;</label><input type="password" tabindex="2" class="input" id="psw2"/><span id="psw2_error" class="error none"></span></div>
+	<div class="cell"><input tabindex="3" type="button" value="登&nbsp;&nbsp;录" class="btn" id="login2"/></div>
+</div>
 <script type="text/javascript" src="../../../module.js"></script>
 <script type="text/javascript">
 
@@ -29,18 +34,25 @@ html,body{width:100%;height:100%;}
 			'mobile':'plugins/mobile'
 		},
 		'alias':{
-			'validator':'{mobile}/validator'
-		}
+            'jquery':'{libs}/jquery-1.8.3.js',
+            'jquery.module':'{modules}/jquery.module',
+			'Validator':'{mobile}/Validator'
+		},
+        'globals':{
+            '$':'jquery.module'
+        }
 	});
-	module.declare(['validator'],function(require,exports){
-		var $=require('jquery.selector'),
-			validator=require('validator');
-		//验证初始化
-		validator.init([{
+    var $name=module.globals('$');
+	module.declare([$name,'Validator'],function(require,exports){
+        var $=require($name),
+			V=require('Validator');//Validator class
+		var v1=new V();
+        //验证初始化
+		v1.init([{
 				'id':'#email',
 				'vtype':'email',
 				'allowBlank':false,
-				'blankText':'不能为空！',
+				'blankText':'不能为空1！',
 				'vtypeText':'输入的邮箱地址未通过验证！',
 				'maxLength':50,
 				'maxLengthText':'邮箱账号不能超过50个字符！'
@@ -51,14 +63,45 @@ html,body{width:100%;height:100%;}
 				'minLength':6,
 				'minLengthText':'密码长度最少为6个字符！'
 			}]);
-		function validate(){
-			return validator.validate(function(id,error){
+		function validate1(){
+			return v1.validate(function(id,error){
 				alert(error);
 			});
 		};
 		//登录
 		$('#login').bind('click',function(){
-			if(validate()){
+            if(validate1()){
+				console.log('validate success!');
+			}else{
+				console.log('validate fail!');
+			}
+		});
+        
+        var v2=new V();
+        //验证初始化
+		v2.init([{
+				'id':'#email2',
+				'vtype':'email',
+				'allowBlank':false,
+				'blankText':'不能为空2！',
+				'vtypeText':'输入的邮箱地址未通过验证！',
+				'maxLength':10,
+				'maxLengthText':'邮箱账号不能超过10个字符！'
+			},{
+				'id':'#psw2',
+				'maxLength':5,
+				'maxLengthText':'密码长度不能超过5个字符！',
+				'minLength':2,
+				'minLengthText':'密码长度最少为2个字符！'
+			}]);
+		function validate2(){
+			return v2.validate(function(id,error){
+				alert(error);
+			});
+		};
+		//登录
+		$('#login2').bind('click',function(){
+            if(validate2()){
 				console.log('validate success!');
 			}else{
 				console.log('validate fail!');

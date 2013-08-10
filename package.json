@@ -1,0 +1,25 @@
+﻿{
+    "name":"module.js",
+    "version":"0.1.0",
+    "description":"module for Plugins Modules library.",
+    "homepage":"https://github.com/donghanji/Plugins-Modules",
+    "author":{
+        "name":"donghanji",
+        "url":"https://github.com/donghanji",
+        "email":"donghanji1986@gmail.com"
+    },
+    "licenses":[{
+        "type":"MIT",
+        "url":"https://github.com/donghanji/Plugins-Modules/blob/master/LICENSE"
+    }],
+    "main":"gruntfile.js",
+    "engines":{
+        "node":">= 0.10.15"
+    },
+    "dependencies":{},
+    "devDependencies":{
+        "grunt":"~0.4.1",
+        "grunt-contrib-jshint":"~0.6.2",
+        "grunt-contrib-uglify":"~0.2.2"
+    }
+}

@@ -1,9 +1,9 @@
 ﻿/*
- * @version v.1.1.123.0
- * @name Plugins Modules
+ * @version v.1.1.1
+ * @name module.js
  * @author donghanji
  
- * @datetime 2013-01-07
+ * @datetime 2013-01-07,2013-09-07
  *
  * @desc
 		//The aims of PM is that taking modules as the core to form a powerful plug-in library.
@@ -25,19 +25,19 @@
 	
 	//module object
 	var module={
-		version:'1.1.123.0',//version
+		version:'1.2.0',//version
 		options:{
 			'require':false,//whether open require mode
 			'nocache':false,
+			'debug':false,//whether open debug mode
 			'timeout':7000,//.ms
+			'mined':'',//''/min/..
 			'base':'',//base path
 			'dirs':{},//directories,include modules,plugins,mobile,pad,web
 			'alias':{},//module alias
 			'files':[],//not a module,a common file,there is no define method in it
-			'globals':{},//global variables
-			'defaults':{},//module configuration
-			'coms':{},//one file ,multiple modules
-			'debug':false//whether open debug mode
+			'coms':{},//one file ,multiple modules,as a component
+			'globals':{}//global variables	
 		},
 		util:{},
 		path:{}
@@ -64,7 +64,7 @@
 	};
 	
 	/* 
-	 * @anme util
+	 * @name util
 	 * @desc 
 	 		the private utilities,internal use only.
 	 *
@@ -121,7 +121,7 @@
 		//unique id
 		util.uid=function(){
 			
-			return new Date().getTime()+Math.floor(Math.random()*1000000);
+			return util.now()+''+Math.floor(Math.random()*1000000);
 		};
 		//is empty
 		util.isEmpty=function(val){
@@ -252,15 +252,13 @@
 		//to real path
 		path.realpath=function(uri){
 			var base=module.options.base;
+			
 			//absolute
 			if(!(uri.indexOf('//') > -1)){
 				uri=base+uri;
 			}
 			if(REGX.SLASHDIR.test(uri)){
 				uri=uri.replace(REGX.SLASHDIR,'');
-			}
-			if(!REGX.JSSUFFIX.test(uri)){
-				uri=uri+'.js';
 			}
 			
 			return uri;
@@ -269,24 +267,23 @@
 	
 	//config base
 	(function(config){
-		var $path=module.path,
-			$config=module.options;
+		var _path=module.path,
+			_config=module.options;
 		
-		var base=$path.dirname(startPath);
+		var base=_path.dirname(startPath);
 		
-		$config.base=base;
-		
+		_config.base=base;
 	})(module.options);
 	
 	//module global variable or cache,when debug mode opening
-	var ModulesSet={};//module set
-	var ModuleCachesQueue=[];//[{id:id,dependencies:[],factory:function,links:[]},{}]
-	var StatusCacheQueue={};//{id:{status:0}}
+	var ModulesSet={},//module set
+		ModuleCachesQueue=[],//[{id:id,dependencies:[],factory:function,links:[]},{}]
+		StatusCacheQueue={};//{id:{status:0}}
 	//module method
 	(function(){
-		var $config=module.options,
-			$util=module.util,
-			$path=module.path;
+		var _config=module.options,
+			_util=module.util,
+			_path=module.path;
 		/*
 		 * @private
 		 * @desc
@@ -297,9 +294,9 @@
 		 *
 		 */
 		module.dirs=function(alias){
-			alias=$util.isObject(alias) ? alias : {};
+			alias=_util.isObject(alias) ? alias : {};
 			
-			var dirs=$config.dirs,
+			var dirs=_config.dirs,
 				reg=REGX['PLACEHOLDER_DIR'];
 			for(var dir in alias){
 				var ret=reg.exec(alias[dir]),
@@ -324,12 +321,19 @@
 				whether open debug mode
 		 */
 		module.init=function(conf){
-			conf=$util.isObject(conf) ? conf : {};
+			conf=_util.isObject(conf) ? conf : {};
 			
-			$config=$util.extend($config,conf);
+			_config=_util.extend(_config,conf);
 			//replace placeholder
-			$config.alias=module.dirs($config.alias);
-			if($config.require === true){
+			_config.alias=module.dirs(_config.alias);
+			
+			//add .
+			var mined=_config.mined,
+				reg=/^\./;
+			mined=(mined && !reg.test(mined)) ? '.'+mined : mined;
+			_config.mined=mined;
+			
+			if(_config.require === true){
 				//require
 				global.require=module.declare;
 				//define
@@ -337,7 +341,7 @@
 				//define.remove
 				global.define.remove=module.remove;
 			}
-			if($config.debug === true){
+			if(_config.debug === true){
 				module.ModulesSet=ModulesSet;
 				module.ModuleCachesQueue=ModuleCachesQueue;
 				module.StatusCacheQueue=StatusCacheQueue;
@@ -354,14 +358,14 @@
 		 * @param {Object}
 		 */
 		module.alias=function(alias){
-			if($util.isEmpty(alias)){
+			if(_util.isEmpty(alias)){
 				
-				return $config.alias;
+				return _config.alias;
 			}
-			alias=$util.isObject(alias) ? alias : {};
+			alias=_util.isObject(alias) ? alias : {};
 			alias=module.dirs(alias);
 			
-			$config.alias=$util.extend(alias,$config.alias);
+			_config.alias=_util.extend(alias,_config.alias);
 		};
 		/*
 		 * @method
@@ -374,16 +378,16 @@
 				Object:a or many file,and the file name will be in the module.alias
 		 */
 		module.files=function(files){
-			if($util.isEmpty(files)){
+			if(_util.isEmpty(files)){
 				
-				return $config.files;
+				return _config.files;
 			}
-			if($util.isString(files)){
+			if(_util.isString(files)){
 				files=[].concat(files);
 			}
-			if($util.isObject(files)){
+			if(_util.isObject(files)){
 				var arr=[];
-				$util.each(files,function(k,v){
+				_util.each(files,function(k,v){
 					arr.push(k);
 				});
 				
@@ -391,7 +395,7 @@
 				files=arr;
 			}
 			
-			$config.files=$util.unique($config.files.concat(files));
+			_config.files=_util.unique(_config.files.concat(files));
 		};
 		/*
 		 * @method
@@ -402,55 +406,17 @@
 		 *
 		 */
 		module.globals=function(globals){
-			if($util.isEmpty(globals)){
+			if(_util.isEmpty(globals)){
 				
-				return $config.globals;
+				return _config.globals;
 			}
-			if($util.isString(globals)){
+			if(_util.isString(globals)){
 				
-				return $config.globals[globals]||'';
+				return _config.globals[globals]||'';
 			}
-			globals=$util.isObject(globals) ? globals : {};
+			globals=_util.isObject(globals) ? globals : {};
 			
-			$config.globals=$util.extend(globals,$config.globals);
-		};
-		/*
-		 * @method
-		 * @public
-		 * @desc
-		 		module configuration,module init configuration
-		 
-		 * @param {undefined/String/Object} name:
-		 		undefined:if name is empty,null,undefined,return all module configurations
-		 		String:conf is undefined,get module configuration
-				Object set many module configurations,{name:{configuration}}
-		 * @param {undefine/Object} conf
-		 		undefined:name is not empty,null,undefined and so on,get a module configuration
-				Object set a module configuration
-		 */
-		module.defaults=function(name,conf){
-			if($util.isEmpty(name)){
-				
-				return $config.defaults;
-			}
-			if($util.isObject(name)){
-				for(var i in name){
-					module.defaults(i,name[i]);
-				}
-				
-				return;
-			}
-			name=module.aliasId(name);
-			
-			if(conf === undefined){
-				
-				return $config.defaults[name]||{};
-			}
-			
-			conf=$util.isObject(conf) ? conf : {};
-			$config.defaults[name]=$config.defaults[name]||{};
-			
-			$config.defaults[name]=$util.extend(conf,$config.defaults[name]);
+			_config.globals=_util.extend(globals,_config.globals);
 		};
 		//get all scripts
 		module.scripts=function(){
@@ -496,9 +462,15 @@
 			var head=document.getElementsByTagName('head')[0],
 				node=module.createScript(id),
 				id=module.aliasId(id,'v'),
-				src=$path.realpath(id);
-			if($config.nocache){
-				src=src+'?t='+new Date().getTime();//add random time
+				src=_path.realpath(id);
+			//add mined
+			src=src+_config.mined;
+			//add .js suffix
+			if(!REGX.JSSUFFIX.test(src)){
+				src=src+'.js';
+			}
+			if(_config.nocache){
+				src=src+'?t='+_util.now();//add random time
 			}
 			node.src=src;
 			head.appendChild(node);
@@ -513,7 +485,7 @@
 		//remove javascript by the data-requiremodule attribute
 		module.removeJS=function(name){
 			name=module.aliasId(name);
-			$util.each(module.scripts(),function(i,scriptNode) {
+			_util.each(module.scripts(),function(i,scriptNode) {
 				if (scriptNode&&scriptNode.getAttribute('data-requiremodule') === name) {
 					scriptNode.parentNode.removeChild(scriptNode);
 					
@@ -561,16 +533,16 @@
 		};
 		//load module
 		module.load=function(uris){
-			$util.each(uris,function(i,id){
+			_util.each(uris,function(i,id){
 				
 				module.loadJS(id);
 			});
 		};
 		// is module in the module.alias
 		module.isInAlias=function(name){
-			var alias=$config.alias;
+			var alias=_config.alias;
 			for(var k in alias){
-				var v=$util.path2name(alias[k]);
+				var v=_util.path2name(alias[k]);
 				if(k === name || v === name || alias[k] === name){
 					
 					return {k:k,v:alias[k]};
@@ -589,7 +561,7 @@
 		};
 		//is module in the module.files
 		module.isInFiles=function(name){
-			var files=$config.files,
+			var files=_config.files,
 				name=module.aliasId(name);
 			var i=0,
 				len=files.length;
@@ -603,11 +575,11 @@
 		};
 		// is module in the module.coms
 		module.isInComs=function(name){
-			var coms=$config.coms,
+			var coms=_config.coms,
 				k=module.aliasId(name),
 				v=module.aliasId(name,'v');
 			for(var m in coms){
-				if(k === m || $util.isInArray(coms[m],k) || $util.isInArray(coms[m],v)){
+				if(k === m || _util.isInArray(coms[m],k) || _util.isInArray(coms[m],v)){
 					
 					return m;	
 				}
@@ -624,7 +596,7 @@
 		//separating a module which has not been in the module set
 		module.noInModulesItems=function(dependencies){
 			var arr=[];
-			$util.each(dependencies,function(i,id){
+			_util.each(dependencies,function(i,id){
 				if(!module.isInModules(id)){
 					
 					arr.push(id);
@@ -660,7 +632,7 @@
 		module.moduleSet=function(id,dependencies,factory){
 			id=module.aliasId(id);
 			
-			if(module.isInModules(id) && $util.isFunction(factory)){
+			if(module.isInModules(id) && _util.isFunction(factory)){
 				if(module.isRequire(factory.toString())){
 					factory(this.declare);
 					return;
@@ -668,7 +640,7 @@
 				throw 'module \"'+ id + '\" already defined!';
 			}
 			
-			if(!$util.isFunction(factory)){
+			if(!_util.isFunction(factory)){
 				
 				return;
 			}
@@ -682,12 +654,13 @@
 		module.compile=function(id){
 			id=module.aliasId(id),
 			v=module.aliasId(id,'v');
-			$util.each(ModuleCachesQueue,function(index,json){
+			_util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
 					return;
 				}
 				var links=json['links']||[];
-				if(!($util.isInArray(links,id) || $util.isInArray(links,v))){
+				
+				if(!(_util.isInArray(links,id) || _util.isInArray(links,v))){
 					
 					return;
 				}
@@ -705,14 +678,14 @@
 				};
 				
 				if(links.length <= 1){
-					var uid=json['id']||$util.uid(),
+					var uid=json['id']||_util.uid(),
 						dependencies=json['dependencies']||[],
 						factory=json['factory']||'';
 						var ms=ModulesSet[id]||{},
 							dept=ms['dependencies']||[];
 						
 						dependencies=dependencies.concat(dept);
-						dependencies=$util.unique(dependencies);
+						dependencies=_util.unique(dependencies);
 						ModuleCachesQueue.splice(index,1);
 						module.complete(uid,dependencies,factory);
 				}
@@ -737,7 +710,7 @@
 			delete module.factory;
 			var moduleExports=factory(this.declare,module.exports,module);
 			//jQuery direct return
-			if($util.isEmptyObject(module.exports)){
+			if(_util.isEmptyObject(module.exports)){
 				module.exports=moduleExports||{};
 			}
 			
@@ -770,59 +743,48 @@
 		 */
 		module.declare=function(id,dependencies,factory){
 			dependencies=dependencies||[];
-			if($util.isArray(id)){
+			if(_util.isArray(id)){
 				factory=dependencies;
 				dependencies=id;
 				id='';
 			}
-			if($util.isFunction(dependencies)){
+			if(_util.isFunction(dependencies)){
 				factory=dependencies;
 				dependencies=[];
 			}
 			
-			if($util.isFunction(id)){
+			if(_util.isFunction(id)){
 				factory=id;
-				dependencies=$util.parseDependencies(factory.toString())||[];
+				dependencies=_util.parseDependencies(factory.toString())||[];
 				id='';
 			}
 			
 			//dependencies=id ? [].concat(id).concat(dependencies) : dependencies;
 			//anonymous module
-			id=id||$util.uid();
+			id=id||_util.uid();
 			var items=module.noInModulesItems(dependencies);
 			if(items&&items.length){
 				var json={
 					id:id,
 					dependencies:dependencies,
 					factory:factory,
-					links:$util.path2name(items)
+					links:_util.path2name(items)
 				};
 				
 				ModuleCachesQueue.push(json);
 				module.load(dependencies);
 				return;
 			}
-			return module.complete(id,dependencies,factory);
-		};
-		module.extend=function(){
-			var options,
-			    res={},
-				length=arguments.length,
-				i=0;
-			for(;i<length;i++){
-				options=arguments[i];
-				if(typeof options === 'object'){
-					for(var name in options){
-						res[name]=options[name];
-					}
-				}
-			}
 			
-			return res;
+			return module.complete(id,dependencies,factory);
 		};
 		//remove a module,only in open require mode
 		module.remove=function(id){
 			id=module.aliasId(id);
+			if(!id){
+				
+				return;
+			}
 			//remove javascript
 			module.removeJS(id);
 			//delete status
@@ -838,7 +800,5 @@
 	global.module.alias=module.alias;
 	global.module.files=module.files;
 	global.module.globals=module.globals;
-	global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
-	global.module.extend=module.extend;//add extend method
 })(this);

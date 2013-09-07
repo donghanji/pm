@@ -14,20 +14,13 @@
 <div class="wellcome"><span class="w">W</span>ellcome to <span class="pm">PM</span> ...<span id="time">0s</span></div>
 <body>
 <script type="text/javascript" src="module.js"></script>
+<script type="text/javascript" src="config.js"></script>
 <script type="text/javascript">
 
 (function(){
-	module.config({
-		require:false,//default false
-		base:'',
-		alias:{},
-		files:[],
-		globals:{},
-		sets:{},
-		debug:false
-	});
+	//test 1
 	//define a module,not a file
-	module.declare('math',function(require,exports,module){
+	/*module.declare('math',function(require,exports,module){
 		exports.add=function(){
 			var sum = 0, i = 0, args = arguments, l = args.length;
 			while (i < l) {
@@ -45,13 +38,25 @@
 		};
 	});
 	
-	//test
+	//require increment module
 	var inc=module.declare('increment').increment,
 		a=0;
 	var t=setInterval(function(){
 		a=inc(a);
 		document.getElementById('time').innerHTML=''+a+'s';
 	},1000);
+	*/
+	
+	//test 2,increment module and math module are files
+	//to comment out the test 1
+	module.declare(['increment'],function(require){
+		var inc=require('increment').increment,
+			a=0;
+		var t=setInterval(function(){
+			a=inc(a);
+			document.getElementById('time').innerHTML=''+a+'s';
+		},1000);
+	});
 })();
 
 </script>

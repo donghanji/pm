@@ -1,4 +1,4 @@
-MIT LICENSE
+﻿MIT LICENSE
 
 Copyright (c) 2013 Luo Xiong, l.x-xiong@163.com
 

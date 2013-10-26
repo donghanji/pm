@@ -3,7 +3,7 @@
  * @name module.js
  * @author donghanji
  
- * @datetime 2013-01-07,2013-09-07
+ * @datetime 2013-01-07,2013-09-07,2013-10-26
  *
  * @desc
 		//The aims of PM is that taking modules as the core to form a powerful plug-in library.
@@ -14,7 +14,7 @@
 		//The future of the PM, you and I, we us grow together...
  *
  * @update
- 		https://github.com/donghanji/Plugins-Modules
+ 		https://github.com/donghanji/pm
  */
 ;(function(global,undefined){
 	//location pathname
@@ -37,6 +37,7 @@
 			'alias':{},//module alias
 			'files':[],//not a module,a common file,there is no define method in it
 			'coms':{},//one file ,multiple modules,as a component
+            'defaults':{},//plugins default setting
 			'globals':{}//global variables	
 		},
 		util:{},
@@ -257,9 +258,9 @@
 			if(!(uri.indexOf('//') > -1)){
 				uri=base+uri;
 			}
-			if(REGX.SLASHDIR.test(uri)){
+			/*if(REGX.SLASHDIR.test(uri)){
 				uri=uri.replace(REGX.SLASHDIR,'');
-			}
+			}*/
 			
 			return uri;
 		};
@@ -417,6 +418,30 @@
 			globals=_util.isObject(globals) ? globals : {};
 			
 			_config.globals=_util.extend(globals,_config.globals);
+		};
+        module.defaults=function(name,conf){
+			if(_util.isEmpty(name)){
+				
+				return _config.defaults;
+			}
+			if(_util.isObject(name)){
+				for(var i in name){
+					module.defaults(i,name[i]);
+				}
+				
+				return;
+			}
+			name=module.aliasId(name);
+			
+			if(conf === undefined){
+				
+				return _config.defaults[name]||{};
+			}
+			
+			conf=_util.isObject(conf) ? conf : {};
+			_config.defaults[name]=_config.defaults[name]||{};
+			
+			_config.defaults[name]=_util.extend(conf,_config.defaults[name]);
 		};
 		//get all scripts
 		module.scripts=function(){

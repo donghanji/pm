@@ -825,5 +825,6 @@
 	global.module.alias=module.alias;
 	global.module.files=module.files;
 	global.module.globals=module.globals;
+    global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
 })(this);

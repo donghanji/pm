@@ -1,5 +1,4 @@
 ﻿/*
- * @version v.1.1.1
  * @name module.js
  * @author donghanji
  
@@ -25,7 +24,6 @@
 	
 	//module object
 	var module={
-		version:'1.2.0',//version
 		options:{
 			'require':false,//whether open require mode
 			'nocache':false,
@@ -525,8 +523,11 @@
 				var data=module.getScriptData(evt),
 					id=data['id'];
 				module.statusSet(id,STATUS.LOADED);
+				
 				if(module.isInFiles(id)){
+					
 					module.compile(id);
+					module.complete(id,[],function(){return {};});
 				}
 				//module.removeJS(id);	
 			}
@@ -592,6 +593,7 @@
 				len=files.length;
 			for(;i<len;i++){
 				if(files[i] === name){
+					
 					return true;
 				}
 			}
@@ -677,8 +679,9 @@
 		};
 		//compile module
 		module.compile=function(id){
-			id=module.aliasId(id),
-			v=module.aliasId(id,'v');
+			id=module.aliasId(id);
+			var v=module.aliasId(id,'v');
+			
 			_util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
 					return;
@@ -720,7 +723,6 @@
 		};
 		//complete a module,return exports
 		module.complete=function(id,dependencies,factory){
-			
 			module.moduleSet(id,dependencies,factory);
 			
 			var exports=module.exports(id);
@@ -825,5 +827,6 @@
 	global.module.alias=module.alias;
 	global.module.files=module.files;
 	global.module.globals=module.globals;
+    global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
 })(this);

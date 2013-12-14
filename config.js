@@ -6,7 +6,7 @@
 		alias:{},
 		files:[],
 		globals:{},
-		sets:{},
+		defaults:{},
 		debug:false
 	});
 })();

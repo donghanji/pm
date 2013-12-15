@@ -1,7 +1,19 @@
-﻿module.exports=function(grunt){
+﻿
+
+
+module.exports=function(grunt){
     grunt.initConfig({
         pkg:grunt.file.readJSON('package.json'),
-        uglify:{
+        jshint:{
+            all:[
+                'gruntfile.js',
+                'module.js'
+            ],
+            options:{
+                jshintrc:'.jshintrc'
+            }
+        },
+		uglify:{
             options:{
                 banner:'/*\n   <%= pkg.name %> ,version <%= pkg.version %> ,updated on <%= grunt.template.today("yyyy-mm-dd") %>\n   <%= pkg.description %>\n\n   <%= pkg.homepage %>\n */\n\n'
             },
@@ -12,7 +24,8 @@
         }
     });
     
+	grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     
-    grunt.registerTask('default',['uglify']);
+    grunt.registerTask('default',['jshint','uglify']);
 };

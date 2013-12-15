@@ -13,11 +13,15 @@
 		//The future of the PM, you and I, we us grow together...
  *
  * @update
- 		https://github.com/donghanji/pm
+		https://github.com/donghanji/pm
  */
-;(function(global,undefined){
+ 
+'use strict';
+
+(function(global,undefined){
 	//location pathname
-	var startPath = window.location.pathname,
+	var document=global.document,
+		startPath = global.location.pathname,
 		//private property
 		class2type={},
 		toString=Object.prototype.toString;
@@ -64,14 +68,14 @@
 	
 	/* 
 	 * @name util
-	 * @desc 
-	 		the private utilities,internal use only.
+	 * @desc
+		the private utilities,internal use only.
 	 *
 	 */
 	(function(util){
 		util.extend=function(){
 			var options,
-			    target=arguments[0]||{},
+				target=arguments[0]||{},
 				length=arguments.length,
 				i=1;
 			if(length === i){
@@ -163,7 +167,7 @@
 					if(callback.call(object[i],i,object[i++]) === false){
 						break;
 					}
-				};
+				}
 			}
 		};
 		//class2type object
@@ -174,12 +178,12 @@
 		util.keys=Object.keys||function(o){
 			var ret=[];
 			for (var p in o) {
-			  if (o.hasOwnProperty(p)) {
-				ret.push(p)
-			  }
+				if (o.hasOwnProperty(p)) {
+					ret.push(p);
+				}
 			}
 		
-			return ret
+			return ret;
 		};
 		//Remove an array of the same
 		util.unique=function(arr){
@@ -224,7 +228,7 @@
 			if(util.isArray(id)){
 				var arr=[];
 				util.each(id,function(i,v){
-					var v=util.path2name(v);
+					v=util.path2name(v);
 					arr.push(v);
 				});
 				
@@ -246,14 +250,14 @@
 		path.dirname=function(uri){
 			var s = uri.match(REGX.BASEDIR);
 			
-    		return (s ? s[0] : '.') + '/';
+			return (s ? s[0] : '.') + '/';
 		};
 		//to real path
 		path.realpath=function(uri){
 			var base=module.options.base;
 			
 			//absolute
-			if(!(uri.indexOf('//') > -1)){
+			if(uri.indexOf('//') === -1){
 				uri=base+uri;
 			}
 			/*if(REGX.SLASHDIR.test(uri)){
@@ -286,7 +290,7 @@
 		/*
 		 * @private
 		 * @desc
-		 		replace placeholders({modules},{plugins},{mobile},{pad} and {web}) for actual directory
+			replace placeholders({modules},{plugins},{mobile},{pad} and {web}) for actual directory
 		 *
 		 * @param {String} alias placeholder directory
 		 * @return {String} alias actual directory
@@ -315,7 +319,7 @@
 		 * @desc module initialization,module config
 		 * 
 		 * @param {Object} conf,reeference module.options
-		 		seting module.options,
+				seting module.options,
 				whether open require mode,
 				whether open debug mode
 		 */
@@ -351,8 +355,8 @@
 		/*
 		 * @method
 		 * @public
-		 * @desc 
-		 		setting module alias
+		 * @desc
+				setting module alias
 		 *
 		 * @param {Object}
 		 */
@@ -369,10 +373,10 @@
 		/*
 		 * @method
 		 * @public
-		 * @desc 
-		 		setting module files,in the files,said the file is not module,only a common file
+		 * @desc
+				setting module files,in the files,said the file is not module,only a common file
 		 * @param {String/Array/Object}
-		 		String:a file name
+				String:a file name
 				Array:many file name
 				Object:a or many file,and the file name will be in the module.alias
 		 */
@@ -400,7 +404,7 @@
 		 * @method
 		 * @public
 		 * @desc
-		 		global variables
+				global variables
 				according to such as jquery,zepto,jqmobi $ variable
 		 *
 		 */
@@ -466,7 +470,7 @@
 				node&&node.detachEvent('error',module.onScriptError);
 			}else{
 				node&&node.removeEventListener('load',module.onScriptLoad,false);
-            	node&&node.removeEventListener('error',module.onScriptError,false);
+				node&&node.removeEventListener('error',module.onScriptError,false);
 			}
 			
 			return{
@@ -484,8 +488,8 @@
 			module.statusSet(id,STATUS.LOADING);
 			var head=document.getElementsByTagName('head')[0],
 				node=module.createScript(id),
-				id=module.aliasId(id,'v'),
-				src=_path.realpath(id);
+				aid=module.aliasId(id,'v'),
+				src=_path.realpath(aid);
 			//add mined
 			src=src+_config.mined;
 			//add .js suffix
@@ -502,7 +506,7 @@
 				node.attachEvent('onerror',module.onScriptError);
 			}else{
 				node.addEventListener('load',module.onScriptLoad,false);
-           		node.addEventListener('error',module.onScriptError,false);
+				node.addEventListener('error',module.onScriptError,false);
 			}
 		};
 		//remove javascript by the data-requiremodule attribute
@@ -519,7 +523,7 @@
 		//script load success callback
 		module.onScriptLoad=function(evt){
 			var el=evt.currentTarget || evt.srcElement;
-			if(evt.type === 'load' || (evt.type == 'readystatechange' && (el.readyState === 'loaded' || el.readyState === 'complete'))){
+			if(evt.type === 'load' || (evt.type === 'readystatechange' && (el.readyState === 'loaded' || el.readyState === 'complete'))){
 				var data=module.getScriptData(evt),
 					id=data['id'];
 				module.statusSet(id,STATUS.LOADED);
@@ -587,10 +591,11 @@
 		};
 		//is module in the module.files
 		module.isInFiles=function(name){
-			var files=_config.files,
-				name=module.aliasId(name);
+			var files=_config.files;
 			var i=0,
 				len=files.length;
+			name=module.aliasId(name);
+			
 			for(;i<len;i++){
 				if(files[i] === name){
 					
@@ -703,7 +708,7 @@
 							return;
 						}
 					}
-				};
+				}
 				
 				if(links.length <= 1){
 					var uid=json['id']||_util.uid(),
@@ -759,14 +764,14 @@
 		 * @method
 		 * @public
 		 * @desc
-		 		the main method,define or require a module
+				the main method,define or require a module
 		 *
 		 * @param {String} id : module id,not necessary
 		 * @param {Array} dependencies : the module dependencies,necessary
 		 * @param {Function} : a callback or module factory,is necessary
 		 * 
-		 * @return 
-		 		return a exports or null,when asynchronous loading return null,require a module return module.exports
+		 * @return
+				return a exports or null,when asynchronous loading return null,require a module return module.exports
 		 */
 		module.declare=function(id,dependencies,factory){
 			dependencies=dependencies||[];
@@ -829,4 +834,4 @@
 	global.module.globals=module.globals;
     global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
-})(this);
+})(window);

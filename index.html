@@ -15,8 +15,31 @@
 <body>
 <script type="text/javascript" src="module.js"></script>
 <script type="text/javascript" src="config.js"></script>
-<script type="text/javascript">
 
+<!--conflict-->
+<!--undefined module,defined _module-->
+<script type="text/javascript">
+(function(){
+	module.conflict();
+})();
+</script>
+<script type="text/javascript">
+(function(){
+	console.log(window.module,window._module);
+})();
+</script>
+<!--defined module,undefined _module-->
+<script type="text/javascript">
+(function(){
+	_module.conflict();
+})();
+</script>
+<script type="text/javascript">
+(function(){
+	console.log(window.module,window._module);
+})();
+</script>
+<script type="text/javascript">
 (function(){
 	//test 1
 	//define a module,not a file

@@ -834,4 +834,35 @@
 	global.module.globals=module.globals;
     global.module.defaults=module.defaults;
 	global.module.declare=module.declare;
+	
+	//conflict
+	global.module.conflict=function(){
+		global._module=global.module;
+		global._require=global.require;
+		global._define=global.define;
+		
+		delete global.module;
+		delete global.require;
+		delete global.define;
+		//
+		global._module.conflict=function(){
+			delete global._module.conflict;
+			global.module=global._module;
+			delete global._module;
+			
+			global._require && global._require.conflict();
+			global._define && global._define.conflict();
+		};
+		global._require && (global._require.conflict=function(){
+			delete global._require.conflict;
+			global.require=global._require;
+			delete global._require;
+		});
+		global._define && (global._define.conflict=function(){
+			delete global._define.conflict;
+			global.define=global._define;
+			delete global._defined;
+		});
+	};
+	
 })(window);

@@ -848,21 +848,13 @@
 		global._module.conflict=function(){
 			delete global._module.conflict;
 			global.module=global._module;
-			delete global._module;
-			
-			global._require && global._require.conflict();
-			global._define && global._define.conflict();
-		};
-		global._require && (global._require.conflict=function(){
-			delete global._require.conflict;
 			global.require=global._require;
-			delete global._require;
-		});
-		global._define && (global._define.conflict=function(){
-			delete global._define.conflict;
 			global.define=global._define;
+			
+			delete global._module;
+			delete global._require;
 			delete global._defined;
-		});
+		};
 	};
 	
 })(window);

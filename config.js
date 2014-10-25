@@ -1,7 +1,7 @@
 (function(){
 	module.config({
 		require:false,//default false
-		base:'js/',
+		base:'testjs/',
 		mined:'',
 		alias:{},
 		files:[],

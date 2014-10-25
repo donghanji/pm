@@ -7,6 +7,7 @@
  */
 (function(){
 	if(module.declare === undefined){
+		
 		throw 'There is no global module.declare method!';
 	}
 	//define another module,in a file too

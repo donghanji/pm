@@ -22,3 +22,7 @@ PM的目标是以Modules作为核心，形成一个强大的插件库，包含Mo
 
 PM的未来，有你，有我，我们一同成长……
 
+
+================
+<a href="https://github.com/donghanji/pm/wiki" target="_blank">帮助文档</a>
+

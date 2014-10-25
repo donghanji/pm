@@ -2,7 +2,7 @@
  * @name module.js
  * @author donghanji
  
- * @datetime 2013-01-07,2013-09-07,2013-10-26
+ * @datetime 2013-01-07,2013-09-07,2013-10-26,2014-07-02,2014-10-25
  *
  * @desc
 		//The aims of PM is that taking modules as the core to form a powerful plug-in library.
@@ -50,7 +50,8 @@
 	var REGX={
 		'SLASHDIR':/^\//,
 		'BASEDIR':/.*(?=\/.*$)/,
-		'JSSUFFIX':/\.js$/,
+		'JSSUFFIX':/\.js(?:\?\w+\=\w+)?$/,
+        'PARAMSUFFIX':/\.js\?\w+\=\w+$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
 		'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
 		'REQUIRE_FUN':/^function \(\w*\)/,
@@ -65,6 +66,8 @@
 		'LOADED':2,
 		'END':3
 	};
+	
+	var _guid=1;//
 	
 	/* 
 	 * @name util
@@ -124,7 +127,7 @@
 		//unique id
 		util.uid=function(){
 			
-			return util.now()+''+Math.floor(Math.random()*1000000);
+			return [util.now(),_guid++,Math.floor(Math.random()*1000000)].join('');
 		};
 		//is empty
 		util.isEmpty=function(val){
@@ -146,6 +149,7 @@
 		//is a empty object
 		util.isEmptyObject=function(obj){
 			for(var name in obj){
+				
 				return false;
 			}
 			
@@ -159,12 +163,14 @@
 			if(isObj){
 				for(var name in object){
 					if(callback.call(object[name],name,object[name]) === false){
+						
 						break;
 					}
 				}
 			}else{
 				for(;i<len;){
 					if(callback.call(object[i],i,object[i++]) === false){
+						
 						break;
 					}
 				}
@@ -179,6 +185,7 @@
 			var ret=[];
 			for (var p in o) {
 				if (o.hasOwnProperty(p)) {
+					
 					ret.push(p);
 				}
 			}
@@ -196,12 +203,14 @@
 		};
 		util.isInArray=function(arr,val){
 			if(!util.isArray(arr)){
+				
 				return false;
 			}
 			var i=0,	
 				len=arr.length;
 			for(;i<len;i++){
 				if(arr[i] === val){
+					
 					return true;
 				}
 			}
@@ -217,6 +226,7 @@
 			
 			while(match = reg.exec(code)){
 				if(match[2]){
+					
 					ret.push(match[2]);
 				}
 			}
@@ -514,8 +524,9 @@
 			if(!REGX.JSSUFFIX.test(src)){
 				src=src+'.js';
 			}
-			if(_config.nocache){
-				src=src+'?t='+_util.now();//add random time
+            //add random time
+			if(_config.nocache && !REGX.PARAMSUFFIX.test(src)){
+				src=[src,'?t=',_util.now()].join('');
 			}
 			node.src=src;
 			head.appendChild(node);
@@ -544,6 +555,7 @@
 			if(evt.type === 'load' || (evt.type === 'readystatechange' && (el.readyState === 'loaded' || el.readyState === 'complete'))){
 				var data=module.getScriptData(evt),
 					id=data['id'];
+				
 				module.statusSet(id,STATUS.LOADED);
 				
 				if(module.isInFiles(id)){
@@ -558,6 +570,7 @@
 		module.onScriptError=function(evt){
 			var data=module.getScriptData(evt),
 				id=data['id'];
+			
 			module.statusSet(id,STATUS.ERROR);
 			module.compile(id);
 			
@@ -673,6 +686,7 @@
 		 */
 		module.isRequire=function(code){
 			if(code){
+				
 				return REGX.REQUIRE_FUN.test(code);	
 			}
 			
@@ -684,9 +698,10 @@
 			
 			if(module.isInModules(id) && _util.isFunction(factory)){
 				if(module.isRequire(factory.toString())){
-					factory(this.declare);
-					return;
+					
+					return factory(this.declare);
 				}
+				
 				throw 'module \"'+ id + '\" already defined!';
 			}
 			
@@ -707,6 +722,7 @@
 			
 			_util.each(ModuleCachesQueue,function(index,json){
 				if(!json){
+					
 					return;
 				}
 				var links=json['links']||[];
@@ -722,8 +738,8 @@
 					for(;i<len;i++){
 						if(links[i] === id){
 							links.splice(i,1);
-							module.compile(id);
-							return;
+							
+							return module.compile(id);
 						}
 					}
 				}
@@ -822,8 +838,8 @@
 				};
 				
 				ModuleCachesQueue.push(json);
-				module.load(dependencies);
-				return;
+				
+				return module.load(dependencies);
 			}
 			
 			return module.complete(id,dependencies,factory);

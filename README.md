@@ -1,10 +1,8 @@
-﻿===============
+﻿<h2>
+PM(Plugins Modules)-A Module Loader for the Web
+</h2>
 
-Plugins Modules
-
-===============
-
-PM(Plugins Modules) follows the CommonJS specification and it is based on the browser-side Javascript to carry out its portion of Modules. Plugins Modules is available under the terms of the [MIT License].
+PM(Plugins Modules) follows the CommonJS specification and it is based on the browser-side Javascript to carry out its portion of Modules. Plugins Modules is available under the terms of the <a href="https://github.com/donghanji/pm/blob/master/LICENSE.md">[MIT License]</a>.
 
 The aims of PM are that taking modules as the core to form a powerful plug-in library. It contains three aspects of plugin, they are: Mobile, Pad and Wed. So the PM is not a frame of my own, but a frame shared by all of us.
 
@@ -23,6 +21,22 @@ PM的目标是以Modules作为核心，形成一个强大的插件库，包含Mo
 PM的未来，有你，有我，我们一同成长……
 
 
-================
+<h2>
+Questions?
+</h2>
+<p>
+If you have any questions, please feel free to ask through <a href="https://github.com/donghanji/pm/issues/new">New Issue</a>.</p>
+<p>
+Use <a href="http://jsbin.com/">http://jsbin.com/</a> or <a href="http://jsfiddle.net/">http://jsfiddle.net/</a> to provide a test page.</p>
+
+<h2>
+Help!
+</h2>
 <a href="https://github.com/donghanji/pm/wiki" target="_blank">帮助文档</a>
+
+
+<h2>
+License
+</h2>
+<p>pm is available under the terms of the <a href="https://github.com/donghanji/pm/blob/master/LICENSE.md">MIT License</a></p>
 

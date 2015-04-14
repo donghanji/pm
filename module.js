@@ -32,7 +32,7 @@
         'PARAMSUFFIX':/\.js\?\w+\=\w+$/,
 		'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
 		'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
-		'REQUIRE_FUN':/^function \(\w*\)/,
+		'REQUIRE_FUN':/^function\s*\(\w*\)/,
 		'MODULENAME':/\/([\w.]+)?(?:\1)?$/,
 		'PLACEHOLDER_DIR':/\{([^\}\{]+)?\}/g
 	};
@@ -328,9 +328,15 @@
         alias=util.isObject(alias) ? alias : {};
         
         var dirs=options.dirs;
-        for(var dir in alias){
+        //dirs
+        for(var dir in dirs){
             
-            alias[dir]=module.replace(dirs,alias[dir]);
+            dirs[dir]=module.replace(dirs,dirs[dir]);
+        }
+        //alias
+        for(var alia in alias){
+            
+            alias[alia]=module.replace(dirs,alias[alia]);
         }
         
         return alias;

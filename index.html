@@ -25,7 +25,7 @@
 			while (i < l) {
 				sum += args[i++];
 			}
-			
+
 			return sum;
 		};
 	});
@@ -36,7 +36,7 @@
 			return add(val,1);
 		};
 	});
-	
+
 	//require increment module
 	var inc=module.declare('increment').increment,
 		a=0;
@@ -45,12 +45,12 @@
 		document.getElementById('time').innerHTML=''+a+'s';
 	},1000);
 	*/
-	
+
 	//test 2,increment module and math module are files
 	//to comment out the test 1
 	module.declare(['increment'],function(require){
 		var inc=require('increment').increment,
-			a=0;
+				a=0;
 		var t=setInterval(function(){
 			a=inc(a);
 			document.getElementById('time').innerHTML=''+a+'s';

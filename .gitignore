@@ -4,3 +4,7 @@
 
 record.txt
 /node_modules/
+
+npm-debug.log
+.gitignore
+.jshintrc

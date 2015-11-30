@@ -1,7 +1,7 @@
 ﻿{
-    "name":"module.js",
-    "version":"1.2.1",
-    "description":"module for Plugins Modules library.",
+    "name":"pm.js",
+    "version":"1.2.2",
+    "description":"module for plugins modules library.",
     "homepage":"https://github.com/donghanji/pm",
     "author":{
         "name":"donghanji",

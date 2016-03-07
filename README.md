@@ -1,10 +1,10 @@
 ﻿<h2>
-PM(Plugins Modules)-A Module Loader for the Web
+pm(plugins modules)-A Module Loader for the Web and Mobile development.
 </h2>
 
-PM(Plugins Modules) follows the CommonJS specification and it is based on the browser-side Javascript to carry out its portion of Modules. Plugins Modules is available under the terms of the <a href="https://github.com/donghanji/pm/blob/master/LICENSE.md">[MIT License]</a>.
+The pm follows the CommonJS specification and it is based on the browser-side Javascript to carry out its portion of Modules. Plugins modules is available under the terms of the <a href="https://github.com/donghanji/pm/blob/master/LICENSE.md">[MIT License]</a>.
 
-The aims of PM are that taking modules as the core to form a powerful plug-in library. It contains,pm,pm.modules,pm.plugins,pm.ui,pm.core,pm.mobi,pm.demo,seven aspects.
+The aims of pm are that taking modules as the core to form a powerful plug-in library. It contains,pm,pm.modules,pm.plugins,pm.ui,pm.core,pm.mobi,pm.demo,seven aspects.
 
 like their name,
 

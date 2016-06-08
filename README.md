@@ -21,3 +21,6 @@ pm.demo,as example, is very ugly.
 Welcome to learn and use it！
 
 ... ...
+
+
+See here,<a href="https://github.com/donghanji/pm/wiki" target="_blank">to learn.</a>

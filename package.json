@@ -1,0 +1,25 @@
+{
+    "name":"pm.js",
+    "version":"1.2.2",
+    "description":"module for plugins modules library.",
+    "homepage":"https://github.com/donghanji/pm",
+    "author":{
+        "name":"donghanji",
+        "url":"https://donghanji.github.com",
+        "email":"donghanji1986@gmail.com"
+    },
+    "licenses":[{
+        "type":"MIT",
+        "url":"https://github.com/donghanji/pm/blob/master/LICENSE.md"
+    }],
+    "main":"gruntfile.js",
+    "engines":{
+        "node":">= 0.10.15"
+    },
+    "dependencies":{},
+    "devDependencies":{
+        "grunt":"~0.4.1",
+        "grunt-contrib-jshint":"~0.6.2",
+        "grunt-contrib-uglify":"~0.2.2"
+    }
+}

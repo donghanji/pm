@@ -261,6 +261,13 @@
             if(uri.indexOf('//') === -1){
                 uri=base+uri;
             }
+            //
+            if(global.location.protocol === 'file:'){
+                if(/^\/\//.test(uri)){
+
+                    uri='http:'+uri;
+                }
+            }
             /*if(REGX.SLASHDIR.test(uri)){
                 uri=uri.replace(REGX.SLASHDIR,'');
             }*/
@@ -327,13 +334,13 @@
             
             var dirs=_config.dirs;
             //
-            for(var dir in dirs){
-                dirs[dir]=module.replace(dirs,dirs[dir]);
+            for(var d in dirs){
+                dirs[d]=module.replace(dirs,dirs[d]);
             }
             //
-            for(var dir in alias){
+            for(var a in alias){
                 
-                alias[dir]=module.replace(dirs,alias[dir]);
+                alias[a]=module.replace(dirs,alias[a]);
             }
             
             return alias;

@@ -28,6 +28,7 @@
     
     //module object
     var module={
+        version:'1.2.3',
         options:{
             'require':false,//whether open require mode
             'nocache':false,
@@ -50,12 +51,12 @@
     var REGX={
         'SLASHDIR':/^\//,
         'BASEDIR':/.*(?=\/.*$)/,
-        'JSSUFFIX':/\.js(?:\?\w+\=\w+)?$/,
-        'PARAMSUFFIX':/\.js\?\w+\=\w+$/,
+        'JSSUFFIX':/\.js(?:\?[\w-\.]+\=[\w-\.]+)?$/,
+        'PARAMSUFFIX':/\.js\?[\w-\.]+\=[\w-\.]+$/,
         'COMMENT':/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
         'REQUIRE':/(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
         'REQUIRE_FUN':/^function \(\w*\)/,
-        'MODULENAME':/\/([\w.]+)?(?:\1)?$/,
+        'MODULENAME':/\/([\w-\.]+)?(?:\1)?$/,
         'PLACEHOLDER_DIR':/\{([^\}\{]+)?\}/g
     },
     //status
